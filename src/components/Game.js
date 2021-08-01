@@ -20,7 +20,6 @@ const Game = ({isGamePaused}) => {
     //2nd card of dealer should be hidden on client side
   const [playerCardTotals, setPlayerCardTotals] = useState({d: 0, p: 0});
     //determine winner/loser
-  const [finishedPlayers, setFinishedPlayers] = useState([]);
   const [gameStatus, setGameStatus] = useState(-1) 
     //possible values -1 not started, 0 started in play, 1 player turn, 2 dealer turn, 3 game over
   // let countDownToGameStart = 30000; //ms units
@@ -283,6 +282,7 @@ const Game = ({isGamePaused}) => {
         let dealerCardsValue = playerGetHandValue(playerHands['d']);
 
         //BUG where infinite loop
+        //BUG when dealer cards are 16 (including ace) and player cards are 21
         while(dealerCardsValue <= 16) {
           let updatedHand = dealOneCardToPlayer('d', shuffledDeck);
           console.log('updatedHand', updatedHand)
