@@ -103,7 +103,7 @@ const Game = ({isGamePaused}) => {
   When the dealer has served every player, the dealers face-down card is turned up. If the total is 17 or more, it must stand. If the total is 16 or under, they must take a card. The dealer must continue to take cards until the total is 17 or more, at which point the dealer must stand. If the dealer has an ace, and counting it as 11 would bring the total to 17 or more (but not over 21), the dealer must count the ace as 11 and stand. The dealer's decisions, then, are automatic on all plays, whereas the player always has the option of taking one or more cards.
   */
   //use to evaluate if the player is bust
-  //use for regular player and for dealer
+  //use for regular player
   const playerGetHandValue = (cards) => {
     let totalValue = 0;
     let {reorderedCards, numberAces} = reorderPlayerCards(cards);
@@ -151,11 +151,15 @@ const Game = ({isGamePaused}) => {
     // }
 
     let copyShuffledDeck = shuffledDeck.slice(0);
+    console.log('copyShuffledDeck len', copyShuffledDeck.length)
 
     let card = copyShuffledDeck.pop();
+    console.log('copyShuffledDeck len', copyShuffledDeck.length)
+
     console.log('card', card);
     let curPlayerHand = playerHands[player].slice(0);
     let updatedPlayerHand = curPlayerHand.concat([card]);
+    console.log('updatedPlayerHand', updatedPlayerHand)
     setPlayerHands({...playerHands, [player]: updatedPlayerHand});
     setShuffledDeck(copyShuffledDeck);
 
@@ -174,8 +178,8 @@ const Game = ({isGamePaused}) => {
   const playerIsDone = (player) => {
     //setFinishedPlayers(finishedPlayers.concat([player]));
     if (player === 'p') {
-      let playerTotal = playerGetHandValue(playerHands['p']);
-      setPlayerCardTotals({...playerCardTotals, ['p']: playerTotal});
+      let playerTotal = playerGetHandValue(playerHands[player]);
+      setPlayerCardTotals({...playerCardTotals, [player]: playerTotal});
       setGameStatus(2);
     }
     if (player === 'd') {
@@ -183,9 +187,6 @@ const Game = ({isGamePaused}) => {
     }
   }
 
-
-  //TODO
-  //evalute winners/losers
   //need to keep track of each player's total hand value at the end of the round
   const getWinnersLosers = () => {
     let losers = [];
@@ -211,26 +212,6 @@ const Game = ({isGamePaused}) => {
 
     return {losers, winners};
   }
-
-  //init a game
-  //TODO decide what are the conditions that determine when a game will start
-  
-
-  //each player's turn
-  //while the player is playing and has not bust
-  //respond to player action (getNewCard or Stop)
-  /*
-    during each turn need to get player move (hit or stop)
-    if hit, then dealOneCardToPlayer()
-      then playerGetHandValue()
-      if bust then move the player to losers array
-      else wait for next turn (reset the timer)
-  */
-
-  //dealer's turn
-  //refer to the website logic, this should be straightforward
-
-
 
   //TODO
   //reset the game
@@ -268,6 +249,69 @@ const Game = ({isGamePaused}) => {
       initialDeal(newShuffledDeck);
     } 
 
+    //test ['sa', 'c3', 'dk']
+    const dealerGetHandValue = (cards) => {
+      let totalValue = 0;
+      let {reorderedCards, numberAces} = reorderPlayerCards(cards);
+      //get the player's cards value
+      //one ace at end of list
+      //multiple aces at end of list; 2 or more aces
+
+      for (let i = 0; i < reorderedCards.length; i++) {
+        let valueStr = reorderedCards[i].slice(1);
+        let valueNum;
+        if (isNaN(valueStr)) {
+          if (valueToNum[valueStr]) {
+            valueNum = valueToNum[valueStr]
+          } else if (valueStr === 'a') {
+            //need to know what is the cards value before aces start
+            //need to know the number of aces
+            let acesPossibleValues = acesCountToPossibleValuesMap.get(numberAces);
+            for (let j = 0; j < acesPossibleValues.length; j++) {
+              if (acesPossibleValues[j] + totalValue >= 17 && acesPossibleValues[j] + totalValue <= 21) {
+                valueNum = acesPossibleValues[j];
+                console.log('dealer totalValue', totalValue + valueNum)
+                return totalValue + valueNum;
+              } else if (acesPossibleValues[j] + totalValue > 21 && j === acesPossibleValues.length - 1) {
+                valueNum = acesPossibleValues[j];
+                console.log('dealer totalValue', totalValue + valueNum)
+                return totalValue + valueNum;
+              } else {
+                valueNum = acesPossibleValues[j];
+              }
+            }
+          }
+        } else {
+          valueNum = parseInt(valueStr, 10);
+        }
+        totalValue += valueNum;
+      }
+      console.log('dealer totalValue', totalValue)
+      return totalValue;
+    }    
+
+    //deal cards to a player
+    const dealOneCardToDealer = (player, shuffledDeck) => {
+      let copyShuffledDeck = shuffledDeck.slice(0);
+      console.log('len copyShuffledDeck', copyShuffledDeck.length)
+      let card = copyShuffledDeck.pop();
+      console.log('len copyShuffledDeck', copyShuffledDeck.length)
+      let curPlayerHand = playerHands[player].slice(0);
+      let updatedPlayerHand = curPlayerHand.concat([card]);
+
+      setPlayerHands({...playerHands, [player]: updatedPlayerHand});
+      setShuffledDeck(copyShuffledDeck);
+
+      let curPlayerHandValue = dealerGetHandValue(updatedPlayerHand);
+      if (curPlayerHandValue >= 21) {
+        setPlayerCardTotals({...playerCardTotals, [player]: curPlayerHandValue})
+        setGameStatus(gameStatus + 1);
+      }
+
+      return {updatedPlayerHand, copyShuffledDeck};
+    }
+
+
     if (gameStatus === 0) {
       initGame();
       setGameStatus(1);
@@ -279,20 +323,22 @@ const Game = ({isGamePaused}) => {
         TEST ???If the dealer has an ace, and counting it as 11 would bring the total to 17 or more (but not over 21), the dealer must count the ace as 11 and stand. The dealer's decisions, then, are automatic on all plays, whereas the player always has the option of taking one or more cards.
       */
         setIsDealerCardHidden(false);
-        let dealerCardsValue = playerGetHandValue(playerHands['d']);
+        let dealerCardsValue = dealerGetHandValue(playerHands['d']);
 
         //BUG where infinite loop
         //BUG when dealer cards are 16 (including ace) and player cards are 21
-        while(dealerCardsValue <= 16) {
-          let updatedHand = dealOneCardToPlayer('d', shuffledDeck);
-          console.log('updatedHand', updatedHand)
-          dealerCardsValue = playerGetHandValue(updatedHand);
+        //'s2, s6, s7'; infinite loop when the hand
+        while (dealerCardsValue <= 16) {
+          let {updatedPlayerHand, copyShuffledDeck} = dealOneCardToDealer('d', shuffledDeck);
+          console.log('updatedPlayerHand', updatedPlayerHand)
+          dealerCardsValue = dealerGetHandValue(updatedPlayerHand);
           console.log('dealerCardsValue', dealerCardsValue)
+          console.log('shuffledDeck len', shuffledDeck.length);
         }
         setPlayerCardTotals(p => { return {...p, ['d']: dealerCardsValue}});
         setGameStatus(3)
     }
-  }, [gameStatus]);
+  }, [gameStatus, shuffledDeck.length, playerHands['d'].length], playerCardTotals['d']);
 
 
   let dealerCards = isDealerCardHidden ? getDealerCardsHidden(): playerHands['d'];
