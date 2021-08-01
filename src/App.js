@@ -1,10 +1,4 @@
 import {useState} from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
 
 import Game from './components/Game';
 import Rules from './components/Rules';
@@ -28,19 +22,17 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="App">
-        <header className="App-header">
-          <button onClick={openRules}>Rules</button>
-        </header>
-        <main>
-          <Game isGamePaused={isGamePaused}/>
-          {showRules && (
-            <Rules resumeGame={resumeGame} />
-          )}
-        </main>
-      </div>
-    </Router>
+    <div className="App">
+      <header className="App-header">
+        <button onClick={openRules}>Rules</button>
+      </header>
+      <main>
+        <Game isGamePaused={isGamePaused}/>
+        {showRules && (
+          <Rules resumeGame={resumeGame} />
+        )}
+      </main>
+    </div>
   );
 }
 
