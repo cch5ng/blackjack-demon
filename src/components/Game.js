@@ -231,6 +231,34 @@ const Game = ({isGamePaused}) => {
 
   useEffect(() => {
 
+    const doPlayerCardsContainAce = (cards) => {
+      console.log('cards', cards)
+      for (let i = 0; i < cards.length; i++) {
+        if (cards[i].indexOf('a') > -1) {
+          return true;
+        }
+      } 
+      return false;
+    }
+  
+    const reorderPlayerCards = (cards) => {
+      if (!doPlayerCardsContainAce(cards)) {
+        return {reorderedCards: cards, numberAces: 0};
+      }
+      let reorderedCards = [];
+      let numberAces = 0;
+      cards.forEach(card => {
+        if (card[card.length - 1] === 'a') {
+          reorderedCards.push(card);
+          numberAces += 1;
+        } else {
+          reorderedCards.unshift(card);
+        }
+      })
+  
+      return {reorderedCards, numberAces};
+    }
+  
     const dealerGetHandValue = (cards) => {
       let totalValue = 0;
       let {reorderedCards, numberAces} = reorderPlayerCards(cards);
@@ -320,7 +348,7 @@ const Game = ({isGamePaused}) => {
       setPlayerCardTotals(p => { return {...p, d: dealerCardsValue}});
       setGameStatus(3);
     }
-  }, [gameStatus, shuffledDeck.length, dealerHandsLen, dealerCardTotal]);
+  }, [gameStatus, shuffledDeck.length, dealerHandsLen, dealerCardTotal, shuffledDeck, playerHands]);
 
   let dealerCards = isDealerCardHidden ? getDealerCardsHidden(): playerHands['d'];
   let {losers, winners} = getWinnersLosers();
