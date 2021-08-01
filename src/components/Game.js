@@ -19,21 +19,61 @@ const Game = ({isGamePaused}) => {
     //key is player id and value is array of their current cards; dealer is 'd'
     //2nd card of dealer should be hidden on client side
   const [playerCardTotals, setPlayerCardTotals] = useState({d: 0, p: 0});
-    //determine winner/loser
   const [gameStatus, setGameStatus] = useState(-1) 
     //possible values -1 not started, 0 started in play, 1 player turn, 2 dealer turn, 3 game over
-  // let countDownToGameStart = 30000; //ms units
-  // let countDownForCurrentTurn = 60000
-  //let waitingOnPlayer = true;
   const [isDealerCardHidden, setIsDealerCardHidden] = useState(true);
 
   console.log('gameStatus', gameStatus);
   console.log('shuffledDeck', shuffledDeck);
 
-  const startGameClick = () => {
-    if (gameStatus === -1) {
-      setGameStatus(0);
+    //deal out the initial cards (2 cards per player, including dealer)
+    const initialDeal = (shuffledDeck) => {
+      let dealerCards = [];
+      let playerCards = [];
+      for (let i = 0; i < (players.length) * 2; i++) {
+        let card = shuffledDeck.pop();
+        let p = i < players.length ? players[i] : players[i % players.length];
+        if (p === 'p') {
+          dealerCards.push(card);
+        }
+        if (p === 'd') {
+          playerCards.push(card);
+        }
+        playerHands[p].push(card);
+      }
+      console.log('playerCards', {d: dealerCards, p: playerCards})
+      setPlayerHands({p: playerCards, d: dealerCards});
     }
+
+    const initGame = () => {
+      let newDeck = createDeck();
+      let newShuffledDeck = shuffleDeck(newDeck);
+      setShuffledDeck(newShuffledDeck);
+      initialDeal(newShuffledDeck);
+    } 
+
+  //TODO
+  //reset the game
+  const resetGame = () => {
+    //shuffle deck on each round
+    setShuffledDeck([]);
+    setPlayerHands({d: [], p: []});
+    setPlayerCardTotals({d: 0, p: 0});
+    setIsDealerCardHidden(true);
+    setGameStatus(-1) 
+  }
+
+  const startGameClick = () => {
+    if (gameStatus === 3) {
+      resetGame();
+        initGame();
+        setGameStatus(1);  
+    }
+    if (gameStatus === -1) {
+      initGame();
+      setGameStatus(1);
+    }
+
   }
 
   //create a deck (ordered)
@@ -213,13 +253,6 @@ const Game = ({isGamePaused}) => {
     return {losers, winners};
   }
 
-  //TODO
-  //reset the game
-  const resetGame = () => {
-    //shuffle deck on each round
-
-  }
-
   const getDealerCardsHidden = () => {
     let hiddenFormattedCards = playerHands['d'].map((card, idx) => {
       if (idx === 1) {
@@ -230,24 +263,10 @@ const Game = ({isGamePaused}) => {
     return hiddenFormattedCards;
   }
 
-  useEffect(() => {
-    //deal out the initial cards (2 cards per player, including dealer)
-    const initialDeal = (shuffledDeck) => {
-      for (let i = 0; i < (players.length) * 2; i++) {
-        let card = shuffledDeck.pop();
-        let p = i < players.length ? players[i] : players[i % players.length];
-        playerHands[p].push(card);
-      }
-      console.log('playerHands', playerHands);
-      //second card
-    }
+  let dealerHandsLen = playerHands['d'].length;
+  let dealerCardTotal = playerCardTotals['d'];
 
-    const initGame = () => {
-      let newDeck = createDeck();
-      let newShuffledDeck = shuffleDeck(newDeck);
-      setShuffledDeck(newShuffledDeck);
-      initialDeal(newShuffledDeck);
-    } 
+  useEffect(() => {
 
     //test ['sa', 'c3', 'dk']
     const dealerGetHandValue = (cards) => {
@@ -295,6 +314,7 @@ const Game = ({isGamePaused}) => {
       let copyShuffledDeck = shuffledDeck.slice(0);
       console.log('len copyShuffledDeck', copyShuffledDeck.length)
       let card = copyShuffledDeck.pop();
+      console.log('newDealerCard', card)
       console.log('len copyShuffledDeck', copyShuffledDeck.length)
       let curPlayerHand = playerHands[player].slice(0);
       let updatedPlayerHand = curPlayerHand.concat([card]);
@@ -302,20 +322,14 @@ const Game = ({isGamePaused}) => {
       setPlayerHands({...playerHands, [player]: updatedPlayerHand});
       setShuffledDeck(copyShuffledDeck);
 
-      let curPlayerHandValue = dealerGetHandValue(updatedPlayerHand);
-      if (curPlayerHandValue >= 21) {
-        setPlayerCardTotals({...playerCardTotals, [player]: curPlayerHandValue})
-        setGameStatus(gameStatus + 1);
-      }
-
       return {updatedPlayerHand, copyShuffledDeck};
     }
 
 
-    if (gameStatus === 0) {
-      initGame();
-      setGameStatus(1);
-    }
+    // if (gameStatus === 0) {
+    //   initGame();
+    //   setGameStatus(1);
+    // }
 
     if (gameStatus === 2) {
       /* dealer turn
@@ -329,16 +343,24 @@ const Game = ({isGamePaused}) => {
         //BUG when dealer cards are 16 (including ace) and player cards are 21
         //'s2, s6, s7'; infinite loop when the hand
         while (dealerCardsValue <= 16) {
+          console.log('dealerCardsValue1', dealerCardsValue)
           let {updatedPlayerHand, copyShuffledDeck} = dealOneCardToDealer('d', shuffledDeck);
           console.log('updatedPlayerHand', updatedPlayerHand)
           dealerCardsValue = dealerGetHandValue(updatedPlayerHand);
-          console.log('dealerCardsValue', dealerCardsValue)
+          console.log('dealerCardsValue2', dealerCardsValue)
           console.log('shuffledDeck len', shuffledDeck.length);
+
+          let curPlayerHandValue = dealerGetHandValue(updatedPlayerHand);
+          if (curPlayerHandValue >= 17) {
+            setPlayerCardTotals({...playerCardTotals, ['d']: curPlayerHandValue})
+            setGameStatus(gameStatus + 1);
+          }
+
         }
         setPlayerCardTotals(p => { return {...p, ['d']: dealerCardsValue}});
         setGameStatus(3)
     }
-  }, [gameStatus, shuffledDeck.length, playerHands['d'].length], playerCardTotals['d']);
+  }, [gameStatus, shuffledDeck.length, dealerHandsLen, dealerCardTotal]);
 
 
   let dealerCards = isDealerCardHidden ? getDealerCardsHidden(): playerHands['d'];
@@ -348,7 +370,9 @@ const Game = ({isGamePaused}) => {
   return (
     <div>
       <h1>Game</h1>
-      <button onClick={startGameClick}>Start Game</button>
+      {(gameStatus === -1 || gameStatus === 3) && (
+        <button onClick={startGameClick}>Start New Game</button>
+      )}
       <div>
         <div>
           <h2>Player cards</h2>
