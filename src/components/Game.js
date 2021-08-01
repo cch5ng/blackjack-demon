@@ -26,31 +26,31 @@ const Game = ({isGamePaused}) => {
   console.log('gameStatus', gameStatus);
   console.log('shuffledDeck', shuffledDeck);
 
-    //deal out the initial cards (2 cards per player, including dealer)
-    const initialDeal = (shuffledDeck) => {
-      let dealerCards = [];
-      let playerCards = [];
-      for (let i = 0; i < (players.length) * 2; i++) {
-        let card = shuffledDeck.pop();
-        let p = i < players.length ? players[i] : players[i % players.length];
-        if (p === 'p') {
-          dealerCards.push(card);
-        }
-        if (p === 'd') {
-          playerCards.push(card);
-        }
-        playerHands[p].push(card);
+  //deal out the initial cards (2 cards per player, including dealer)
+  const initialDeal = (shuffledDeck) => {
+    let dealerCards = [];
+    let playerCards = [];
+    for (let i = 0; i < (players.length) * 2; i++) {
+      let card = shuffledDeck.pop();
+      let p = i < players.length ? players[i] : players[i % players.length];
+      if (p === 'p') {
+        dealerCards.push(card);
       }
-      console.log('playerCards', {d: dealerCards, p: playerCards})
-      setPlayerHands({p: playerCards, d: dealerCards});
+      if (p === 'd') {
+        playerCards.push(card);
+      }
+      playerHands[p].push(card);
     }
+    console.log('playerCards', {d: dealerCards, p: playerCards})
+    setPlayerHands({p: playerCards, d: dealerCards});
+  }
 
-    const initGame = () => {
-      let newDeck = createDeck();
-      let newShuffledDeck = shuffleDeck(newDeck);
-      setShuffledDeck(newShuffledDeck);
-      initialDeal(newShuffledDeck);
-    } 
+  const initGame = () => {
+    let newDeck = createDeck();
+    let newShuffledDeck = shuffleDeck(newDeck);
+    setShuffledDeck(newShuffledDeck);
+    initialDeal(newShuffledDeck);
+  } 
 
   //TODO
   //reset the game
@@ -66,14 +66,13 @@ const Game = ({isGamePaused}) => {
   const startGameClick = () => {
     if (gameStatus === 3) {
       resetGame();
-        initGame();
-        setGameStatus(1);  
+      initGame();
+      setGameStatus(1);  
     }
     if (gameStatus === -1) {
       initGame();
       setGameStatus(1);
     }
-
   }
 
   //create a deck (ordered)
@@ -108,6 +107,7 @@ const Game = ({isGamePaused}) => {
 
   //array of card strings
   const doPlayerCardsContainAce = (cards) => {
+    console.log('cards', cards)
     for (let i = 0; i < cards.length; i++) {
       if (cards[i].indexOf('a') > -1) {
         return true;
@@ -131,8 +131,6 @@ const Game = ({isGamePaused}) => {
       }
     })
 
-    console.log('reorderedCards', reorderedCards)
-    console.log('numberAces', numberAces)
     return {reorderedCards, numberAces};
   }
 
@@ -184,22 +182,10 @@ const Game = ({isGamePaused}) => {
 
   //deal cards to a player
   const dealOneCardToPlayer = (player, shuffledDeck) => {
-    //BUG? think I have to shuffleDeck for each new round?
-    // if (!shuffledDeck.length) {
-    //   deck = createDeck();
-    //   shuffledDeck = shuffleDeck(deck);
-    // }
-
     let copyShuffledDeck = shuffledDeck.slice(0);
-    console.log('copyShuffledDeck len', copyShuffledDeck.length)
-
     let card = copyShuffledDeck.pop();
-    console.log('copyShuffledDeck len', copyShuffledDeck.length)
-
-    console.log('card', card);
     let curPlayerHand = playerHands[player].slice(0);
     let updatedPlayerHand = curPlayerHand.concat([card]);
-    console.log('updatedPlayerHand', updatedPlayerHand)
     setPlayerHands({...playerHands, [player]: updatedPlayerHand});
     setShuffledDeck(copyShuffledDeck);
 
@@ -211,12 +197,9 @@ const Game = ({isGamePaused}) => {
 
     return updatedPlayerHand;
     //shuffledDeck has to have cards
-    //handle player request for another card
-    //handle player request to stop
   }
 
   const playerIsDone = (player) => {
-    //setFinishedPlayers(finishedPlayers.concat([player]));
     if (player === 'p') {
       let playerTotal = playerGetHandValue(playerHands[player]);
       setPlayerCardTotals({...playerCardTotals, [player]: playerTotal});
@@ -235,21 +218,18 @@ const Game = ({isGamePaused}) => {
     if (playerCardTotals['p'] === 21 && playerCardTotals['d'] === 21) {
       return {losers, winners};
     }
-
     if (playerCardTotals['d'] <= 21) {
       if (playerCardTotals['p'] < playerCardTotals['d'] || playerCardTotals['p'] > 21) {
         losers.push('p');
         winners.push('d');  
       }
     }
-
     if (playerCardTotals['p'] <= 21) {
       if (playerCardTotals['d'] < playerCardTotals['p'] || playerCardTotals['d'] > 21) {
         losers.push('d');
         winners.push('p');  
       }
     }
-
     return {losers, winners};
   }
 
@@ -272,6 +252,8 @@ const Game = ({isGamePaused}) => {
     const dealerGetHandValue = (cards) => {
       let totalValue = 0;
       let {reorderedCards, numberAces} = reorderPlayerCards(cards);
+      console.log('reorderedCards', reorderedCards)
+      console.log('numberAces', numberAces)
       //get the player's cards value
       //one ace at end of list
       //multiple aces at end of list; 2 or more aces
@@ -295,8 +277,9 @@ const Game = ({isGamePaused}) => {
                 valueNum = acesPossibleValues[j];
                 console.log('dealer totalValue', totalValue + valueNum)
                 return totalValue + valueNum;
-              } else {
+              } else if (acesPossibleValues[j] + totalValue < 17) {
                 valueNum = acesPossibleValues[j];
+                return totalValue + valueNum;
               }
             }
           }
@@ -307,29 +290,20 @@ const Game = ({isGamePaused}) => {
       }
       console.log('dealer totalValue', totalValue)
       return totalValue;
-    }    
-
-    //deal cards to a player
-    const dealOneCardToDealer = (player, shuffledDeck) => {
-      let copyShuffledDeck = shuffledDeck.slice(0);
-      console.log('len copyShuffledDeck', copyShuffledDeck.length)
-      let card = copyShuffledDeck.pop();
-      console.log('newDealerCard', card)
-      console.log('len copyShuffledDeck', copyShuffledDeck.length)
-      let curPlayerHand = playerHands[player].slice(0);
-      let updatedPlayerHand = curPlayerHand.concat([card]);
-
-      setPlayerHands({...playerHands, [player]: updatedPlayerHand});
-      setShuffledDeck(copyShuffledDeck);
-
-      return {updatedPlayerHand, copyShuffledDeck};
     }
+    
+    //deal cards to a player
+    const dealOneCardToDealer = (playerCards, shuffledDeck) => {
+      let copyPlayerCards = playerCards.slice(0);
+      let copyShuffledDeck = shuffledDeck.slice(0);
+      let card = copyShuffledDeck.pop();
+      copyPlayerCards.push(card)
+      console.log('curPlayerHand', copyPlayerCards)
+      console.log('expect curPlayerHand to be mising one card bc of async playerHands update')
+      //let updatedPlayerHand = curPlayerHand.concat([card]);
 
-
-    // if (gameStatus === 0) {
-    //   initGame();
-    //   setGameStatus(1);
-    // }
+      return {updatedPlayerHand: copyPlayerCards, copyShuffledDeck}    
+    }
 
     if (gameStatus === 2) {
       /* dealer turn
@@ -338,25 +312,45 @@ const Game = ({isGamePaused}) => {
       */
         setIsDealerCardHidden(false);
         let dealerCardsValue = dealerGetHandValue(playerHands['d']);
+        let dealerNewCardsCount = 0;
+        let dealerCards = playerHands['d'];
+        console.log('initDealerCardsValue', dealerCardsValue)
+        console.log('initDealerHand', playerHands['d'])
+        console.log('initShuffledDeck', shuffledDeck)
+        let lastShuffledDeck;
 
         //BUG where infinite loop
         //BUG when dealer cards are 16 (including ace) and player cards are 21
         //'s2, s6, s7'; infinite loop when the hand
-        while (dealerCardsValue <= 16) {
-          console.log('dealerCardsValue1', dealerCardsValue)
-          let {updatedPlayerHand, copyShuffledDeck} = dealOneCardToDealer('d', shuffledDeck);
-          console.log('updatedPlayerHand', updatedPlayerHand)
-          dealerCardsValue = dealerGetHandValue(updatedPlayerHand);
-          console.log('dealerCardsValue2', dealerCardsValue)
-          console.log('shuffledDeck len', shuffledDeck.length);
-
-          let curPlayerHandValue = dealerGetHandValue(updatedPlayerHand);
-          if (curPlayerHandValue >= 17) {
-            setPlayerCardTotals({...playerCardTotals, ['d']: curPlayerHandValue})
-            setGameStatus(gameStatus + 1);
+        //dealerCardsValue1 and dealerCardsValue2 are same value but dealerCardsValue2 should be higher
+        //issue is with shuffled deck I think; not getting updated, new card not pulled?
+        //why the total is not increasing
+        //or updatedPlayerHand is wrong value
+        
+        while (dealerGetHandValue(dealerCards) <= 16) {
+          if (dealerNewCardsCount === 0) {
+            let {updatedPlayerHand, copyShuffledDeck} = dealOneCardToDealer(dealerCards, shuffledDeck)
+            console.log('0 updatedPlayerHand', updatedPlayerHand)
+            console.log('0 copyShuffledDeck', copyShuffledDeck)
+            dealerCardsValue = dealerGetHandValue(updatedPlayerHand);
+            setPlayerHands({...playerHands, ['d']: updatedPlayerHand})
+            setShuffledDeck(copyShuffledDeck);
+            lastShuffledDeck = copyShuffledDeck;
+            dealerCards = updatedPlayerHand;
+            dealerNewCardsCount += 1;
+          } else {
+            let {updatedPlayerHand, copyShuffledDeck} = dealOneCardToDealer(dealerCards, lastShuffledDeck)
+            dealerCards = updatedPlayerHand;
+            console.log('1 updatedPlayerHand', updatedPlayerHand)
+            console.log('1 copyShuffledDeck', copyShuffledDeck)
+            dealerCardsValue = dealerGetHandValue(updatedPlayerHand);
+            setPlayerHands({...playerHands, ['d']: updatedPlayerHand})
+            setShuffledDeck(copyShuffledDeck);
+            lastShuffledDeck = copyShuffledDeck;
+            dealerNewCardsCount += 1;
           }
-
         }
+
         setPlayerCardTotals(p => { return {...p, ['d']: dealerCardsValue}});
         setGameStatus(3)
     }
