@@ -1,5 +1,5 @@
 .sprite {
-  width: 97.84px;
+  width: 97.8px;
   height: 143px;
 }
 
@@ -15,4 +15,19 @@
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+}
+
+.card_hidden {
+  width: 90px;
+  height: 135px;
+  margin-top: -5px;
+  background-color: #fff;
+  border-radius: 12px;
+}
+
+.card_text {
+  margin-top: 55px;
+  color: #f00;
+  text-align: center;
+  font-size: 1.2rem;
 }

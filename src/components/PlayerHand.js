@@ -27,13 +27,13 @@ const PlayerHand = ({cards, player, isDealerCardHidden }) => {
             let startFrame = CARD_STR_AR.indexOf(card) + 1;
             //TODO handle case when dealer card2 should be hidden
             if (player === 'd' && isDealerCardHidden === true && idx === 1) {
-              return (<div key={card}>Hidden Card</div>)
+              return (<div className="card_hidden" key={card}><div className="card_text">???</div></div>)
             }
             return (
               <Spritesheet
                 className="sprite"
                 image={sprite}
-                widthFrame={97.84}
+                widthFrame={97.8} 
                 heightFrame={143}
                 steps={52}
                 startAt={startFrame}
