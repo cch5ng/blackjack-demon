@@ -4,7 +4,7 @@ const Rules = ({resumeGame}) => {
   return (
     <div className="rules_container">
       <h1>Blackjack Rules</h1>
-      <button onClick={resumeGame}>Go to Game</button>
+      <div className="btn_rules" ><button onClick={resumeGame} className="btn">Go to Game</button></div>
 
       <div>
         Overview: Two player card game (using a tradition 52-card deck). You vs the dealer.
@@ -44,7 +44,7 @@ const Rules = ({resumeGame}) => {
         </ul>
       </div>
 
-      <button onClick={resumeGame}>Go to Game</button>
+      <div className="btn_rules" ><button onClick={resumeGame} className="btn">Go to Game</button></div>
     </div>
   )
 }
