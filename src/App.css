@@ -1,17 +1,18 @@
 .App {
   color: #fff;
   background-color: #281B3A;
+  min-width: 100vw;
   min-height: 100vh;
 }
 
 .App-header {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
   height: 50px;
-  padding: 16px;
   border-bottom: 1px solid #fff;
+  padding: 16px;
 }
 
 .title {
@@ -64,4 +65,16 @@ main {
 
 .btn_spacer {
   margin: 20px 0;
+}
+
+a:link,
+a:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
+a:focus,
+a:hover,
+a:active {
+  text-decoration: underline;
 }
