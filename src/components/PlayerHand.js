@@ -43,7 +43,7 @@ const PlayerHand = ({cards, player, isDealerCardHidden }) => {
             )  
           } else {
             let src = CARD_STR_TO_IMG_SRC[card]
-            return <div key={card}><img src={src} alt="card image" /></div>
+            return <div key={card}><img src={src} alt={card} /></div>
           }
 
         })}
