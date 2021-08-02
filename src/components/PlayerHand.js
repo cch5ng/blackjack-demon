@@ -20,7 +20,7 @@ const PlayerHand = ({cards, player, isDealerCardHidden }) => {
   let curPlayer = player === 'p' ? `Player`: `Dealer`;
   return (
     <div className="player_hand_container">
-      <div><h1>{curPlayer } Hand</h1></div>
+      <div><h2>{curPlayer } Hand</h2></div>
       <div className="cards_container">
         {cards.map((card, idx) => {
           if (CARD_STR_AR.indexOf(card) > -1) {
