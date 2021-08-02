@@ -1,7 +1,10 @@
 import {useEffect, useState} from 'react';
 
+import PlayerHand from './PlayerHand';
+import './Game.css';
+
 //constants
-const SHAPES = ['d', 'h', 'c', 's'];
+const SHAPES = ['h', 'd', 'c', 's'];
 const VALUES = ['a', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k'];
 const valueToNum = {j: 10, q: 10, k: 10};
 const acesCountToPossibleValuesMap = new Map();
@@ -216,15 +219,15 @@ const Game = ({isGamePaused}) => {
     return {losers, winners};
   }
 
-  const getDealerCardsHidden = () => {
-    let hiddenFormattedCards = playerHands['d'].map((card, idx) => {
-      if (idx === 1) {
-        return 'hidden';
-      }
-      return card;
-    });
-    return hiddenFormattedCards;
-  }
+  // const getDealerCardsHidden = () => {
+  //   let hiddenFormattedCards = playerHands['d'].map((card, idx) => {
+  //     if (idx === 1) {
+  //       return 'hidden';
+  //     }
+  //     return card;
+  //   });
+  //   return hiddenFormattedCards;
+  // }
 
   let dealerHandsLen = playerHands['d'].length;
   let dealerCardTotal = playerCardTotals['d'];
@@ -308,10 +311,6 @@ const Game = ({isGamePaused}) => {
     }
 
     if (gameStatus === 2) {
-      /* dealer turn
-        When the dealer has served every player, the dealers face-down card is turned up. If the total is 17 or more, it must stand. If the total is 16 or under, they must take a card. The dealer must continue to take cards until the total is 17 or more, at which point the dealer must stand. 
-        TEST ???If the dealer has an ace, and counting it as 11 would bring the total to 17 or more (but not over 21), the dealer must count the ace as 11 and stand. The dealer's decisions, then, are automatic on all plays, whereas the player always has the option of taking one or more cards.
-      */
       setIsDealerCardHidden(false);
       let dealerCardsValue = dealerGetHandValue(playerHands['d']);
       let dealerNewCardsCount = 0;
@@ -350,7 +349,7 @@ const Game = ({isGamePaused}) => {
     }
   }, [gameStatus, shuffledDeck.length, dealerHandsLen, dealerCardTotal, shuffledDeck, playerHands]);
 
-  let dealerCards = isDealerCardHidden ? getDealerCardsHidden(): playerHands['d'];
+  //let dealerCards = isDealerCardHidden ? getDealerCardsHidden(): playerHands['d'];
   let {losers, winners} = getWinnersLosers();
   console.log('playerCardTotals', playerCardTotals);
 
@@ -361,21 +360,15 @@ const Game = ({isGamePaused}) => {
         <button onClick={startGameClick}>Start New Game</button>
       )}
       <div>
-        <div>
-          <h2>Player cards</h2>
-          {gameStatus === 1 && (
-            <>
-              <button onClick={() => dealOneCardToPlayer('p', shuffledDeck)}>Hit</button>
-              <button onClick={() => playerIsDone('p')}>Stay</button>
-            </>
-          )}
-        </div>
-        <p>{playerHands.p.join(', ')}</p>  
-      </div>  
-      <div>
-        <h2>Dealer cards</h2>
-        <p>{dealerCards.join(', ')}</p>  
-      </div> 
+        {gameStatus === 1 && (
+          <>
+            <button onClick={() => dealOneCardToPlayer('p', shuffledDeck)}>Hit</button>
+            <button onClick={() => playerIsDone('p')}>Stay</button>
+          </>
+        )}
+      </div>
+      <PlayerHand cards={playerHands.p} player="p" />
+      <PlayerHand cards={playerHands.d} player="d" isDealerCardHidden={isDealerCardHidden} />
       {gameStatus === 3 && (
         <div>
           <div>Winner: {winners.join(', ')}</div>
@@ -387,3 +380,4 @@ const Game = ({isGamePaused}) => {
 }
 
 export default Game;
+
