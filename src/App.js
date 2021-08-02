@@ -26,7 +26,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div className="title">Blackjack Demon</div>
-        <div><button onClick={openRules}>Rules</button></div>
+        <div><button className="btn" onClick={openRules}>Rules</button></div>
       </header>
       <main>
         <Game isGamePaused={isGamePaused}/>

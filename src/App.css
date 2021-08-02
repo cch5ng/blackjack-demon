@@ -35,3 +35,19 @@ h2 {
 main {
   padding: 16px;
 }
+
+.btn {
+  height: 35px;
+  margin-left: 12px;
+  padding: 0 16px;
+  font-size: 1.0rem;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Josefin Sans', sans-serif;
+  color: #191919;
+}
+
+.btn:hover,
+.btn:active {
+  background-color: #bebac3;
+}
