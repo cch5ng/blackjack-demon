@@ -1,4 +1,4 @@
-# TODO UPDATE README TEMPLATE FE MENTOR
+# TODO UPDATE README TEMPLATE FE MENTOR# Blackjack Demon Readme
 
 This is a solution to the [IP address tracker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/ip-address-tracker-I8-0yYAH0). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
 
@@ -22,12 +22,11 @@ This is a solution to the [IP address tracker challenge on Frontend Mentor](http
 
 ### The challenge
 
-Users should be able to:
+Create a traditional card game as web app. I chose blackjack with one stack of cards (52 cards) and simple rules (no betting, no doubling down, no splitting). This is a one-player game where the player is challenging a dealer (bot).
 
-- View the optimal layout for each page depending on their device's screen size
-- See hover states for all interactive elements on the page
-- See their own IP address on the map on the initial page load
-- Search for any IP addresses or domains and see the key information and location
+[My game rules](https://github.com/cch5ng/blackjack-demon/blob/main/src/components/Rules.js)
+
+[Additional requirements](https://info.mintbean.io/hiring-hackathon-guide)
 
 ### Screenshot
 
@@ -43,8 +42,9 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- [Solution URL:](https://github.com/cch5ng/blackjack-demon)
+- [Live Site URL:](http://blackjack-demon.vercel.app/)
+
 
 ## My process
 
@@ -53,13 +53,10 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 - Semantic HTML5 markup
 - CSS custom properties
 - Flexbox
-- CSS Grid
 - Mobile-first workflow
 - [React](https://reactjs.org/) - JS library
-- [Next.js](https://nextjs.org/) - React framework
-- [Styled Components](https://styled-components.com/) - For styles
+- [react-responsive-spritesheet](https://www.npmjs.com/package/react-responsive-spritesheet) - React library for using spritesheet graphics
 
-**Note: These are just examples. Delete this note and replace the list above with your own choices**
 
 ### What I learned
 
