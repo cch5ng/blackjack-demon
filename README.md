@@ -1,6 +1,6 @@
-# TODO UPDATE README TEMPLATE FE MENTOR# Blackjack Demon Readme
+# Blackjack Demon Readme
 
-This is a solution to the [IP address tracker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/ip-address-tracker-I8-0yYAH0). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
+This is a solution to the (Mintbean card game challenge)[https://mintbean.io/meets/7e2331fb-1e0d-4b31-86b9-a46acad877af].
 
 ## Table of contents
 
@@ -8,6 +8,7 @@ This is a solution to the [IP address tracker challenge on Frontend Mentor](http
   - [The challenge](#the-challenge)
   - [Screenshot](#screenshot)
   - [Links](#links)
+- [Install/Run locally](#Install/Run)
 - [My process](#my-process)
   - [Built with](#built-with)
   - [What I learned](#what-i-learned)
@@ -15,8 +16,6 @@ This is a solution to the [IP address tracker challenge on Frontend Mentor](http
   - [Useful resources](#useful-resources)
 - [Author](#author)
 - [Acknowledgments](#acknowledgments)
-
-**Note: Delete this note and update the table of contents based on what sections you keep.**
 
 ## Overview
 
@@ -45,6 +44,23 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 - [Solution URL:](https://github.com/cch5ng/blackjack-demon)
 - [Live Site URL:](http://blackjack-demon.vercel.app/)
 
+## Install/Run
+
+* Clone the project from https://github.com/cch5ng/blackjack-demon
+
+* Install required files from the project root. (Node v14.16 used)
+
+```
+cd blackjack-demon
+npm install
+```
+
+* Run the project.
+
+```
+npm start
+```
+
 
 ## My process
 
@@ -54,60 +70,52 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 - CSS custom properties
 - Flexbox
 - Mobile-first workflow
+- [Create React App](https://github.com/facebook/create-react-app)
 - [React](https://reactjs.org/) - JS library
 - [react-responsive-spritesheet](https://www.npmjs.com/package/react-responsive-spritesheet) - React library for using spritesheet graphics
-
+- [Gimp](https://www.gimp.org/) - Gimp graphics editor
+- [Google web fonts](https://fonts.google.com/) - Google Web Fonts
+- [color-hex](https://www.color-hex.com/) - Color Hex Color Codes
 
 ### What I learned
 
-Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
+* Originally I tried for the Full Stack version and got client-side Firebase authentication running. But I felt behind on schedule so I switched to Front-end only. I got exposure to Firebase but can continue learning.
 
-To see how you can add code snippets, see below:
+* I had to spend a bit of time troubleshooting a timing issue in useEffect() during the state where it is the dealer's turn to play. I had to create a workaround for tracking the dealer's cards within the game logic because the state was not getting updated as quickly as expected in the logic. It is something to continue looking at.
 
-```html
-<h1>Some HTML code I'm proud of</h1>
-```
-```css
-.proud-of-this-css {
-  color: papayawhip;
-}
-```
-```js
-const proudOfThisFunc = () => {
-  console.log('🎉')
-}
-```
-
-If you want more help with writing markdown, we'd recommend checking out [The Markdown Guide](https://www.markdownguide.org/) to learn more.
-
-**Note: Delete this note and the content within this section and replace with your own learnings.**
+* This is more of a reminder but I think I spent way more time testing than actually coding. So just a reminder about the importance of going through a wide set of test cases.
 
 ### Continued development
 
-Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
+Some areas for improvement:
 
-**Note: Delete this note and the content within this section and replace with your own plans for continued development.**
+* There is some redundancy with a couple of functions in the game engine (copied into the useEffect() call because of function dependencies), which could be cleaned up (but they are called outside of useEffect() as well).
+
+* The game play moves very quickly so some timeouts might be added to make the card dealing actions more similar to human-scale timing.
+
+* Exploring more separation of business logic vs display. There are a lot of functions in the game engine and many of the functions impact state so they were included in the Game component but for more extensive automated testing, more of the functions might be moved to a separate utilities file. Mainly extensive manual testing was done.
+
+* Some animations might be added as responses to events like Blackjack or going bust.
+
+* (enhancement) Support for additional players.
+
+* (enhancement) Support for betting.
 
 ### Useful resources
 
-- [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
-- [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
+- [react-responsive-spritesheet](https://www.npmjs.com/package/react-responsive-spritesheet) - This library saved me a bit of time with using a single graphic of a card set online (vs recreating cards or having to separate them manually). It was a dated library though and so a little buggy with handling a spritesheet with multiple rows of images.
+- [https://www.techwalla.com/articles/how-to-replace-color-in-gimp-2](https://www.techwalla.com/articles/how-to-replace-color-in-gimp-2) - Used to change the card background colors.
+- [https://pixabay.com/vectors/atlasnye-deck-playing-cards-game-884206/](https://pixabay.com/vectors/atlasnye-deck-playing-cards-game-884206/) - Converted to be used as spritesheet for card graphics.
 
-**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
 
 ## Author
 
-- Website - [Add your name here](https://www.your-site.com)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
-- Twitter - [@yourusername](https://www.twitter.com/yourusername)
-
-**Note: Delete this note and add/remove/edit lines above based on what links you'd like to share.**
+- Website - [Carol Chung](http://www.carolchung.com)
+- Blog - [https://carolchung-eng.tumblr.com](https://carolchung-eng.tumblr.com)
 
 ## Acknowledgments
 
-This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
-
-**Note: Delete this note and edit this section's content as necessary. If you completed this challenge by yourself, feel free to delete this section entirely.**
+This README template came from a [Frontend Mentor project](https://www.frontendmentor.io/). When I was first getting into programming, I took a Python course (series) on Coursera by Rice University. We learned programming through creating games and that experience was helpful to this project and the way I think about programming. The course was revised but [this is the starting course](https://www.coursera.org/learn/interactive-python-1) and the instructors were John Greiner, Stephen Wong, Scott Rixner, and Joe Warren.
 
 //////
 
