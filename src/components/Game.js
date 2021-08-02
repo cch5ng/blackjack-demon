@@ -355,16 +355,18 @@ const Game = ({isGamePaused}) => {
 
   return (
     <div>
-      <h1>Game</h1>
-      {(gameStatus === -1 || gameStatus === 3) && (
-        <button onClick={startGameClick}>Start New Game</button>
-      )}
-      <div>
+      <div className="game_header">
+        <h1>Game</h1>
+        {(gameStatus === -1 || gameStatus === 3) && (
+          <div className="btn_container_game_header">
+            <button onClick={startGameClick} className="btn">Start New Game</button></div>
+        )}
         {gameStatus === 1 && (
-          <>
-            <button onClick={() => dealOneCardToPlayer('p', shuffledDeck)}>Hit</button>
-            <button onClick={() => playerIsDone('p')}>Stay</button>
-          </>
+          <div className="btn_container_game_header">
+            <button onClick={() => dealOneCardToPlayer('p', shuffledDeck)}
+              className="btn">Hit</button>
+            <button onClick={() => playerIsDone('p')} className="btn">Stay</button>
+          </div>
         )}
       </div>
       <PlayerHand cards={playerHands.p} player="p" />
