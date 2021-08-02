@@ -16,7 +16,7 @@ const players = ['p','d'];
 
 const Game = ({isGamePaused}) => {
 
-//vars game state
+  //vars game state
   const [shuffledDeck, setShuffledDeck] = useState([]);
   const [playerHands, setPlayerHands] = useState({d: [], p: []});
     //key is player id and value is array of their current cards; dealer is 'd'
@@ -26,9 +26,6 @@ const Game = ({isGamePaused}) => {
     //possible values -1 not started, 0 started in play, 1 player turn, 2 dealer turn, 3 game over
   const [isDealerCardHidden, setIsDealerCardHidden] = useState(true);
   const [displayResults, setDisplayResults] = useState(true);
-
-  console.log('gameStatus', gameStatus);
-  console.log('shuffledDeck', shuffledDeck);
 
   //deal out the initial cards (2 cards per player, including dealer)
   const initialDeal = (shuffledDeck) => {
@@ -45,7 +42,6 @@ const Game = ({isGamePaused}) => {
       }
       playerHands[p].push(card);
     }
-    console.log('playerCards', {d: dealerCards, p: playerCards})
     setPlayerHands({p: playerCards, d: dealerCards});
   }
 
@@ -87,7 +83,6 @@ const Game = ({isGamePaused}) => {
         newDeck.push(card);
       })
     })
-    console.log('newDeck', newDeck);
     return newDeck;
   }
 
@@ -102,13 +97,11 @@ const Game = ({isGamePaused}) => {
       let removedCard = copyDeck.splice(randIdx, 1);
       shuffledDeck.push(removedCard[0]);
     }
-    console.log('shuffledDeck', shuffledDeck);
     return shuffledDeck;
   }
 
   //array of card strings
   const doPlayerCardsContainAce = (cards) => {
-    console.log('cards', cards)
     for (let i = 0; i < cards.length; i++) {
       if (cards[i].indexOf('a') > -1) {
         return true;
@@ -151,11 +144,9 @@ const Game = ({isGamePaused}) => {
           for (let j = 0; j < acesPossibleValues.length; j++) {
             if (acesPossibleValues[j] + totalValue <= 21) {
               valueNum = acesPossibleValues[j];
-              console.log('player totalValue', totalValue + valueNum)
               return totalValue + valueNum;
             } else if (acesPossibleValues[j] + totalValue > 21 && j === acesPossibleValues.length - 1) {
               valueNum = acesPossibleValues[j];
-              console.log('player totalValue', totalValue + valueNum)
               return totalValue + valueNum;
             }
           }
@@ -165,7 +156,6 @@ const Game = ({isGamePaused}) => {
       }
       totalValue += valueNum;
     }
-    console.log('player totalValue', totalValue)
     return totalValue;
   }
 
@@ -244,7 +234,6 @@ const Game = ({isGamePaused}) => {
   useEffect(() => {
 
     const doPlayerCardsContainAce = (cards) => {
-      console.log('cards', cards)
       for (let i = 0; i < cards.length; i++) {
         if (cards[i].indexOf('a') > -1) {
           return true;
@@ -274,8 +263,6 @@ const Game = ({isGamePaused}) => {
     const dealerGetHandValue = (cards) => {
       let totalValue = 0;
       let {reorderedCards, numberAces} = reorderPlayerCards(cards);
-      console.log('reorderedCards', reorderedCards)
-      console.log('numberAces', numberAces)
 
       for (let i = 0; i < reorderedCards.length; i++) {
         let valueStr = reorderedCards[i].slice(1);
@@ -288,11 +275,9 @@ const Game = ({isGamePaused}) => {
             for (let j = 0; j < acesPossibleValues.length; j++) {
               if (acesPossibleValues[j] + totalValue >= 17 && acesPossibleValues[j] + totalValue <= 21) {
                 valueNum = acesPossibleValues[j];
-                console.log('dealer totalValue', totalValue + valueNum)
                 return totalValue + valueNum;
               } else if (acesPossibleValues[j] + totalValue > 21 && j === acesPossibleValues.length - 1) {
                 valueNum = acesPossibleValues[j];
-                console.log('dealer totalValue', totalValue + valueNum)
                 return totalValue + valueNum;
               } else if (acesPossibleValues[j] + totalValue < 17) {
                 valueNum = acesPossibleValues[j];
@@ -305,7 +290,6 @@ const Game = ({isGamePaused}) => {
         }
         totalValue += valueNum;
       }
-      console.log('dealer totalValue', totalValue)
       return totalValue;
     }
 
@@ -314,7 +298,6 @@ const Game = ({isGamePaused}) => {
       let copyShuffledDeck = shuffledDeck.slice(0);
       let card = copyShuffledDeck.pop();
       copyPlayerCards.push(card);
-      console.log('curPlayerHand', copyPlayerCards)
 
       return {updatedPlayerHand: copyPlayerCards, copyShuffledDeck}    
     }
@@ -324,16 +307,11 @@ const Game = ({isGamePaused}) => {
       let dealerCardsValue = dealerGetHandValue(playerHands['d']);
       let dealerNewCardsCount = 0;
       let dealerCards = playerHands['d'];
-      console.log('initDealerCardsValue', dealerCardsValue)
-      console.log('initDealerHand', playerHands['d'])
-      console.log('initShuffledDeck', shuffledDeck)
       let lastShuffledDeck;
       
       while (dealerGetHandValue(dealerCards) <= 16) {
         if (dealerNewCardsCount === 0) {
           let {updatedPlayerHand, copyShuffledDeck} = dealOneCardToDealer(dealerCards, shuffledDeck)
-          console.log('0 updatedPlayerHand', updatedPlayerHand)
-          console.log('0 copyShuffledDeck', copyShuffledDeck)
           dealerCardsValue = dealerGetHandValue(updatedPlayerHand);
           setPlayerHands({...playerHands, d: updatedPlayerHand})
           setShuffledDeck(copyShuffledDeck);
@@ -343,8 +321,6 @@ const Game = ({isGamePaused}) => {
         } else {
           let {updatedPlayerHand, copyShuffledDeck} = dealOneCardToDealer(dealerCards, lastShuffledDeck)
           dealerCards = updatedPlayerHand;
-          console.log('1 updatedPlayerHand', updatedPlayerHand)
-          console.log('1 copyShuffledDeck', copyShuffledDeck)
           dealerCardsValue = dealerGetHandValue(updatedPlayerHand);
           setPlayerHands({...playerHands, d: updatedPlayerHand})
           setShuffledDeck(copyShuffledDeck);
@@ -357,8 +333,6 @@ const Game = ({isGamePaused}) => {
       setGameStatus(3);
     }
   }, [gameStatus, shuffledDeck.length, dealerHandsLen, dealerCardTotal, shuffledDeck, playerHands]);
-
-  console.log('playerCardTotals', playerCardTotals);
 
   return (
     <div className="game_container">
@@ -388,8 +362,7 @@ const Game = ({isGamePaused}) => {
           <div className="text_score">Your score: {playerCardTotals.p}</div>
           <div className="text_score">Dealer's score: {playerCardTotals.d}</div>
           <div className="btn_spacer"><button onClick={startGameClick} className="btn btn_dark">Play Again</button></div>
-          {/* <div>Winner: {winners.join(', ')}</div>
-          <div>Loser: {losers.join(', ')}</div> */}
+
         </div>
       )}
     </div>
@@ -397,4 +370,3 @@ const Game = ({isGamePaused}) => {
 }
 
 export default Game;
-
