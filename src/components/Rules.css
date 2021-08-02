@@ -1,9 +1,15 @@
 .rules_container {
-  width: 100vw;
+  width: calc(100vw - 32px);
   height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 10;
-  background-color: #fff;
+  padding: 16px;
+  color: #fff;
+  background-color: #281B3A;
+}
+
+.btn_rules {
+  text-align: right;
 }
