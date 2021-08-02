@@ -2,6 +2,7 @@ import {useState} from 'react';
 
 import Game from './components/Game';
 import Rules from './components/Rules';
+import './App.css';
 
 function App() {
   const [showRules, setShowRules] = useState(true);
@@ -24,7 +25,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={openRules}>Rules</button>
+        <div className="title">Blackjack Demon</div>
+        <div><button onClick={openRules}>Rules</button></div>
       </header>
       <main>
         <Game isGamePaused={isGamePaused}/>
