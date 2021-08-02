@@ -25,6 +25,7 @@ const Game = ({isGamePaused}) => {
   const [gameStatus, setGameStatus] = useState(-1) 
     //possible values -1 not started, 0 started in play, 1 player turn, 2 dealer turn, 3 game over
   const [isDealerCardHidden, setIsDealerCardHidden] = useState(true);
+  const [displayResults, setDisplayResults] = useState(true);
 
   console.log('gameStatus', gameStatus);
   console.log('shuffledDeck', shuffledDeck);
@@ -61,6 +62,7 @@ const Game = ({isGamePaused}) => {
     setPlayerHands({d: [], p: []});
     setPlayerCardTotals({d: 0, p: 0});
     setIsDealerCardHidden(true);
+    setDisplayResults(true);
     setGameStatus(-1) 
   }
 
@@ -219,15 +221,22 @@ const Game = ({isGamePaused}) => {
     return {losers, winners};
   }
 
-  // const getDealerCardsHidden = () => {
-  //   let hiddenFormattedCards = playerHands['d'].map((card, idx) => {
-  //     if (idx === 1) {
-  //       return 'hidden';
-  //     }
-  //     return card;
-  //   });
-  //   return hiddenFormattedCards;
-  // }
+  const closeDisplayResults = () => {
+    setDisplayResults(false);
+  }
+
+  const getResultsMessage = () => {
+    let {losers, winners} = getWinnersLosers();
+    if (losers.length === 0 && winners.length === 0) {
+      return `There were no winners.`;
+    }
+    if (winners.indexOf('p') > -1) {
+      return `You won!`;
+    }
+    if (losers.indexOf('p') > -1) {
+      return `You lost.`;
+    }
+  }
 
   let dealerHandsLen = playerHands['d'].length;
   let dealerCardTotal = playerCardTotals['d'];
@@ -349,12 +358,10 @@ const Game = ({isGamePaused}) => {
     }
   }, [gameStatus, shuffledDeck.length, dealerHandsLen, dealerCardTotal, shuffledDeck, playerHands]);
 
-  //let dealerCards = isDealerCardHidden ? getDealerCardsHidden(): playerHands['d'];
-  let {losers, winners} = getWinnersLosers();
   console.log('playerCardTotals', playerCardTotals);
 
   return (
-    <div>
+    <div className="game_container">
       <div className="game_header">
         <h1>Game</h1>
         {(gameStatus === -1 || gameStatus === 3) && (
@@ -371,10 +378,18 @@ const Game = ({isGamePaused}) => {
       </div>
       <PlayerHand cards={playerHands.p} player="p" />
       <PlayerHand cards={playerHands.d} player="d" isDealerCardHidden={isDealerCardHidden} />
-      {gameStatus === 3 && (
-        <div>
-          <div>Winner: {winners.join(', ')}</div>
-          <div>Loser: {losers.join(', ')}</div>
+      {gameStatus === 3 && displayResults === true && (
+        <div className="results_container">
+          <div className="btn_close_container">
+            <button className="btn_close" onClick={closeDisplayResults}>X</button>
+          </div>
+          <div className="avatar_dealer">TODO</div>
+          <div><h2 className="results_message">{getResultsMessage()}</h2></div>
+          <div className="text_score">Your score: {playerCardTotals.p}</div>
+          <div className="text_score">Dealer's score: {playerCardTotals.d}</div>
+          <div className="btn_spacer"><button onClick={startGameClick} className="btn btn_dark">Play Again</button></div>
+          {/* <div>Winner: {winners.join(', ')}</div>
+          <div>Loser: {losers.join(', ')}</div> */}
         </div>
       )}
     </div>
