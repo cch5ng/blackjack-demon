@@ -1,0 +1,10 @@
+.game_header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.btn_container_game_header {
+  margin-left: 24px;
+}
