@@ -68,6 +68,26 @@ const Rules = ({resumeGame}) => {
         <div className="btn_rules" ><button onClick={resumeGame} className="btn">Go to Game</button></div>
       </div>
 
+      <div>
+        <h2>Technologies</h2>
+        <ul>
+          <li>React/Create React App (using hooks - useState() and useEffect())</li>
+          <li>Flexbox for layout</li>
+          <li>Responsive design (minimal for modals)</li>
+          <li>Spritesheet (react-responsive-spritesheet) for rendering cards from one spritesheet. There was a bug in the library so 3 cards had to be rendered as separate images.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Team</h2>
+        <ul>
+          <li>Carol Chung (Front-end dev)</li>
+          <li><a href="http://www.carolchung.com" target="_blank" rel="noreferrer">www.carolchung.com</a></li>
+          <li><a href="https://carolchung-eng.tumblr.com" target="_blank" rel="noreferrer">blog</a></li>
+        </ul>
+      </div>
+
+      <div className="btn_rules" ><button onClick={resumeGame} className="btn">Go to Game</button></div>
     </div>
 
   )
