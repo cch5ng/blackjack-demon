@@ -32,14 +32,6 @@ Create a traditional card game as web app. I chose blackjack with one stack of c
 ![](./blackjack_thumbnail.png)
 ![](./subtitle_reminder.png)
 
-Add a screenshot of your solution. The easiest way to do this is to use Firefox to view your project, right-click the page and select "Take a Screenshot". You can choose either a full-height screenshot or a cropped one based on how long the page is. If it's very long, it might be best to crop it.
-
-Alternatively, you can use a tool like [FireShot](https://getfireshot.com/) to take the screenshot. FireShot has a free option, so you don't need to purchase it. 
-
-Then crop/optimize/edit your image however you like, add it to your project, and update the file path in the image above.
-
-**Note: Delete this note and the paragraphs above when you add your screenshot. If you prefer not to add a screenshot, feel free to remove this entire section.**
-
 ### Links
 
 - [Solution URL:](https://github.com/cch5ng/blackjack-demon)
@@ -83,11 +75,11 @@ npm start
 
 ### What I learned
 
-* Originally I tried for the Full Stack version and got client-side Firebase authentication running. But I felt behind on schedule so I switched to Front-end only. I got exposure to Firebase but can continue learning.
+* Originally I tried for the Full Stack version and got client-side Firebase authentication running. But I felt behind on schedule so I switched to Front-end only. I got exposure to Firebase auth but can continue learning.
 
-* I had to spend a bit of time troubleshooting a timing issue in useEffect() during the state where it is the dealer's turn to play. I had to create a workaround for tracking the dealer's cards within the game logic because the state was not getting updated as quickly as expected in the logic. It is something to continue looking at.
+* I had to spend a bit of time troubleshooting a timing issue in useEffect() during the state where it is the dealer's turn to play. I had to create a workaround for tracking the dealer's cards within the game logic because the state was not getting updated as quickly as expected in the logic. I redefined a repeating function to return the expected new state values which were required to decide when to break out of a while loop. It is something to continue looking at.
 
-* This is more of a reminder but I think I spent way more time testing than actually coding. So just a reminder about the importance of going through a wide set of test cases.
+* This is more of a reminder but I think I spent way more time testing than actually coding. So just a reminder about the importance of going through a wide set of test cases. I think some of the game logic could be refactored in a format like passing in a state value as parameter and returning a value (maybe the new value that should be assigned to state). This would make it easier to define automated tests.
 
 ### Continued development
 
@@ -100,10 +92,6 @@ Some areas for improvement:
 * Exploring more separation of business logic vs display. There are a lot of functions in the game engine and many of the functions impact state so they were included in the Game component but for more extensive automated testing, more of the functions might be moved to a separate utilities file. Mainly extensive manual testing was done.
 
 * Some animations might be added as responses to events like Blackjack or going bust.
-
-* (enhancement) Support for additional players.
-
-* (enhancement) Support for betting.
 
 ### Useful resources
 
