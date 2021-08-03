@@ -2,6 +2,9 @@ import {useEffect, useState} from 'react';
 
 import PlayerHand from './PlayerHand';
 import './Game.css';
+import dealer_win from '../dealer_win_1300.png';
+import dealer_lose from '../dealer_lose_1300.png';
+import no_winner from '../no_winner_1300.png';
 
 //constants
 const SHAPES = ['h', 'd', 'c', 's'];
@@ -13,6 +16,11 @@ acesCountToPossibleValuesMap.set(2, [12, 2]);
 acesCountToPossibleValuesMap.set(3, [13, 3]);
 acesCountToPossibleValuesMap.set(4, [14, 4]);
 const players = ['p','d'];
+const resultsMessageToAvatarSrc = {
+  "There were no winners.": no_winner,
+  "You won!": dealer_lose,
+  "You lost.": dealer_win,
+};
 
 const Game = ({isGamePaused}) => {
 
@@ -334,6 +342,11 @@ const Game = ({isGamePaused}) => {
     }
   }, [gameStatus, shuffledDeck.length, dealerHandsLen, dealerCardTotal, shuffledDeck, playerHands]);
 
+  let resultsMessage = getResultsMessage();
+  console.log('resultsMessage', resultsMessage)
+  let avatarSrc = resultsMessageToAvatarSrc[resultsMessage];
+  console.log('avatarSrc', avatarSrc)
+
   return (
     <div className="game_container">
       <div className="game_header">
@@ -357,7 +370,9 @@ const Game = ({isGamePaused}) => {
           <div className="btn_close_container">
             <button className="btn_close" onClick={closeDisplayResults}>X</button>
           </div>
-          <div className="avatar_dealer">TODO</div>
+          <div className="avatar_dealer">
+            <img src={avatarSrc} alt="dealer avatar" className="img_avatar_dealer" />
+          </div>
           <div><h2 className="results_message">{getResultsMessage()}</h2></div>
           <div className="text_score">Your score: {playerCardTotals.p}</div>
           <div className="text_score">Dealer's score: {playerCardTotals.d}</div>

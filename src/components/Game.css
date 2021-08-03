@@ -49,6 +49,11 @@
   clear: both;
 }
 
+.img_avatar_dealer {
+  max-width: 100%;
+  width: 200px;
+}
+
 .results_message {
   font-size: 2.0rem;
 }
@@ -57,10 +62,11 @@
   font-size: 1.3rem;
 }
 
+
 @media (min-width: 768px) {
   .results_container {
     width: 60vw;
-    height: 50vh;  
+    height: 550px;  
     left: 20vw;
     top: 10vh;
     border-radius: 12px;
