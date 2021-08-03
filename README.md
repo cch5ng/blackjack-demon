@@ -29,7 +29,8 @@ Create a traditional card game as web app. I chose blackjack with one stack of c
 
 ### Screenshot
 
-![](./screenshot.jpg)
+![](./blackjack_thumbnail.png)
+![](./subtitle_reminder.png)
 
 Add a screenshot of your solution. The easiest way to do this is to use Firefox to view your project, right-click the page and select "Take a Screenshot". You can choose either a full-height screenshot or a cropped one based on how long the page is. If it's very long, it might be best to crop it.
 
@@ -43,6 +44,9 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 
 - [Solution URL:](https://github.com/cch5ng/blackjack-demon)
 - [Live Site URL:](http://blackjack-demon.vercel.app/)
+- [Social Media:](https://youtu.be/pdALezNWw1s)
+
+* Please turn on Youtube subtitles (clicking the CC on the controls) for short explanations.
 
 ## Install/Run
 
